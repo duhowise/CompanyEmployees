@@ -1,6 +1,4 @@
 using CompanyEmployees.Extensions;
-using Contracts;
-using LoggerService;
 using Microsoft.AspNetCore.HttpOverrides;
 using NLog;
 
@@ -11,6 +9,7 @@ LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nl
 builder.Services.ConfigureCors();
 builder.Services.ConfigureIISIntegration();
 builder.Services.ConfigureLoggerService();
+builder.Services.ConfigureSqlContext(builder.Configuration);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
