@@ -1,6 +1,8 @@
 ﻿using Contracts;
 using Entities;
 using LoggerService;
+using Microsoft.EntityFrameworkCore;
+using Repository;
 
 namespace CompanyEmployees.Extensions;
 
@@ -39,5 +41,10 @@ public static class ServiceExtensions
             );
             
         });
+    }
+
+    public static void ConfigureRepositoryManager(this IServiceCollection services)
+    {
+        services.AddScoped<IRepositoryManager, RepositoryManager>();
     }
 }
