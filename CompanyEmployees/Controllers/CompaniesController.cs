@@ -6,11 +6,11 @@ namespace CompanyEmployees.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SamplesController : ControllerBase
+    public class CompaniesController : ControllerBase
     {
         private readonly IRepositoryManager _repository;
 
-        public SamplesController(IRepositoryManager repository)
+        public CompaniesController(IRepositoryManager repository)
         {
             _repository = repository;
         }
