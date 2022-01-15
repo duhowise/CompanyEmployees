@@ -6,14 +6,17 @@ namespace CompanyEmployees.Extensions;
 
 public static class ExceptionMiddlewareExtensions
 {
-    public static void ConfigureExceptionHandler(this IApplicationBuilder app, ILoggerManager logger)
+    public static void ConfigureExceptionHandler(this IApplicationBuilder app)
     {
+        using var scope = app.ApplicationServices.CreateScope();
+        var logger = scope.ServiceProvider.GetRequiredService<ILoggerManager>();
+
         app.UseExceptionHandler(appError =>
         {
             appError.Run(async context =>
             {
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                context.Response.ContentType= "application/json";
+                context.Response.ContentType = "application/json";
 
                 var contextFeature = context.Features.Get<IExceptionHandlerFeature>();
                 if (contextFeature != null)
@@ -22,7 +25,7 @@ public static class ExceptionMiddlewareExtensions
                     await context.Response.WriteAsync(new ErrorDetails
                     {
                         StatusCode = context.Response.StatusCode,
-                        Message = "Internal server error",
+                        Message = $"Internal server error",
                     }.ToString());
                 }
             });

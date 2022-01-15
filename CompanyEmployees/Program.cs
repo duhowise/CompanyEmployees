@@ -1,4 +1,5 @@
 using CompanyEmployees.Extensions;
+using Contracts;
 using Microsoft.AspNetCore.HttpOverrides;
 using NLog;
 
@@ -30,6 +31,7 @@ else
     app.UseHsts();
 }
 
+app.ConfigureExceptionHandler();
 app.UseHttpsRedirection();
 app.UseCors("CorsPolicy");
 app.UseForwardedHeaders(new ForwardedHeadersOptions
