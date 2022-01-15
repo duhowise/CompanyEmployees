@@ -10,31 +10,25 @@ namespace CompanyEmployees.Controllers
     public class CompaniesController : ControllerBase
     {
         private readonly IRepositoryManager _repository;
-        private readonly ILoggerManager _logger;
         private readonly IMapper _mapper;
+        private readonly ILoggerManager _logger;
 
-        public CompaniesController(IRepositoryManager repository, ILoggerManager logger,IMapper mapper)
+        public CompaniesController(IRepositoryManager repository,IMapper mapper, ILoggerManager logger)
         {
             _repository = repository;
-            _logger = logger;
             _mapper = mapper;
+            _logger = logger;
         }
 
 
         [HttpGet]
         public IActionResult GetCompanies()
         {
-            try
-            {
-                var companies = _repository.Company.GetAllCompanies(trackChanges: false);
-                var companiesDto = _mapper.Map<CompanyDto[]>(companies);
-                return Ok(companiesDto);
-            }
-            catch (Exception exception)
-            {
-                _logger.LogError($"Something went wrong in the {nameof(GetCompanies)}action { exception}");
-            return StatusCode(500, "Internal server error");
-            }
+            var companies = _repository.Company.GetAllCompanies(trackChanges: false);
+            var companiesDto = _mapper.Map<CompanyDto[]>(companies);
+            return Ok(companiesDto);
         }
+
+       
     }
 }

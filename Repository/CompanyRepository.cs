@@ -14,4 +14,6 @@ public class CompanyRepository:RepositoryBase<Company>,ICompanyRepository
     {
         return FindAll(trackChanges).OrderBy(c => c.Name).ToList();
     }
+
+    
 }
