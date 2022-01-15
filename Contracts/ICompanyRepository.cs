@@ -1,9 +1,9 @@
-﻿namespace Contracts
+﻿using Entities.Models;
+
+namespace Contracts
 {
     public interface ICompanyRepository
-    { }
-
-    public interface IEmployeeRepository
     {
+        IEnumerable<Company> GetAllCompanies(bool trackChanges);
     }
 }
