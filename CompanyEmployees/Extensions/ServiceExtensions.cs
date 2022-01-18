@@ -2,6 +2,7 @@
 using Entities;
 using LoggerService;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Net.Http.Headers;
 using Repository;
 
 namespace CompanyEmployees.Extensions;
@@ -34,17 +35,24 @@ public static class ServiceExtensions
     {
         services.AddDbContext<RepositoryContext>(options =>
         {
-            options.UseSqlServer(configuration.GetConnectionString("sqlConnection"),sqlServerOptionsAction =>
-                {
-                    sqlServerOptionsAction.MigrationsAssembly("CompanyEmployees");
-                }
+            options.UseSqlServer(configuration.GetConnectionString("sqlConnection"),
+                sqlServerOptionsAction => { sqlServerOptionsAction.MigrationsAssembly("CompanyEmployees"); }
             );
-            
         });
     }
 
     public static void ConfigureRepositoryManager(this IServiceCollection services)
     {
         services.AddScoped<IRepositoryManager, RepositoryManager>();
+    }
+
+    public static IMvcBuilder AddCustomCsvFormatter(this IMvcBuilder builder)
+    {
+        return builder.AddMvcOptions(config =>
+            {
+                config.OutputFormatters.Add(new CsvOutputFormatter());
+                config.FormatterMappings.SetMediaTypeMappingForFormat("csv", MediaTypeHeaderValue.Parse("text/csv"));
+            }
+        );
     }
 }
