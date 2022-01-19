@@ -20,5 +20,8 @@ public class CompanyRepository:RepositoryBase<Company>,ICompanyRepository
         return FindByCondition(x => x.Id.Equals(companyId), trackChanges).SingleOrDefault();
     }
 
-
+    public void CreateCompany(Company company)
+    {
+        Create(company);
+    }
 }
