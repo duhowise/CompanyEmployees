@@ -81,7 +81,7 @@ namespace CompanyEmployees.Controllers
             }, employeeToReturn);
         }
 
-        public IActionResult DeleteEmployeeForCompany(Guid companyId, Guid id)
+       [HttpDelete("{id}")] public IActionResult DeleteEmployeeForCompany(Guid companyId, Guid id)
         {
             var company = _repository.Company.GetCompany(companyId, trackChanges: false);
             if (company == null)
