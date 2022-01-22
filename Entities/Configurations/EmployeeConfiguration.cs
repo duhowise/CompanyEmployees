@@ -8,6 +8,8 @@ public class EmployeeConfiguration:IEntityTypeConfiguration<Employee>
 {
     public void Configure(EntityTypeBuilder<Employee> builder)
     {
+        builder.HasOne(x => x.Company).WithMany(x => x.Employees)
+            .HasForeignKey(x => x.CompanyId).OnDelete(DeleteBehavior.Cascade).IsRequired();
         builder.HasData
         (
             new Employee
