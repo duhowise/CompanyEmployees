@@ -1,5 +1,4 @@
 using CompanyEmployees.Extensions;
-using Contracts;
 using Microsoft.AspNetCore.HttpOverrides;
 using NLog;
 
@@ -17,7 +16,10 @@ builder.Services.AddControllers(config =>
 {
     //config.RespectBrowserAcceptHeader = true;
     config.ReturnHttpNotAcceptable = true;
-}).AddCustomCsvFormatter().AddXmlDataContractSerializerFormatters()
+}).AddNewtonsoftJson()
+    .AddCustomCsvFormatter()
+    .AddXmlDataContractSerializerFormatters()
+    
     ;
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
