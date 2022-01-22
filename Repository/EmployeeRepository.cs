@@ -25,11 +25,13 @@ public class EmployeeRepository:RepositoryBase<Employee>,IEmployeeRepository
 
     public void CreateEmployeeForCompany(Guid companyId, Employee employee)
     {
-        throw new NotImplementedException();
+        employee.CompanyId = companyId;
+        Create(employee);
     }
 
+    
     public void DeleteEmployee(Employee employee)
     {
-        throw new NotImplementedException();
+       Delete(employee);
     }
 }
