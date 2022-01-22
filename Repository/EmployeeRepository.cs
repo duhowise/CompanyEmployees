@@ -22,4 +22,14 @@ public class EmployeeRepository:RepositoryBase<Employee>,IEmployeeRepository
     {
         return FindByCondition(x => x.CompanyId.Equals(companyId) && x.Id.Equals(id), trackChanges).SingleOrDefault();
     }
+
+    public void CreateEmployeeForCompany(Guid companyId, Employee employee)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void DeleteEmployee(Employee employee)
+    {
+        throw new NotImplementedException();
+    }
 }
