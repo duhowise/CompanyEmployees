@@ -1,5 +1,6 @@
 using CompanyEmployees.Extensions;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc;
 using NLog;
 
 
@@ -18,9 +19,11 @@ builder.Services.AddControllers(config =>
     config.ReturnHttpNotAcceptable = true;
 }).AddNewtonsoftJson()
     .AddCustomCsvFormatter()
-    .AddXmlDataContractSerializerFormatters()
-    
-    ;
+    .AddXmlDataContractSerializerFormatters();
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.SuppressModelStateInvalidFilter = true;
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
