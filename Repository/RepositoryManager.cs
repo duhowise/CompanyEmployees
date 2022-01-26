@@ -31,6 +31,12 @@ public class RepositoryManager:IRepositoryManager
             return _employeeRepository;
         }
     }
+
+    public async Task SaveAsync()
+    {
+       await _context.SaveChangesAsync();
+    }
+
     public void Save()
     {
         _context.SaveChanges();
