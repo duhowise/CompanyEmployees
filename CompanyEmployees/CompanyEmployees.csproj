@@ -24,6 +24,7 @@
   <ItemGroup>
     <Folder Include="Extensions\" />
     <Folder Include="ModelBinders\" />
+    <Folder Include="ActionFilters\" />
   </ItemGroup>
 
   <ItemGroup>
