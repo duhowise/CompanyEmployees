@@ -4,6 +4,7 @@ using CompanyEmployees.ModelBinders;
 using Contracts;
 using Entities.DataTransferObjects;
 using Entities.Models;
+using Entities.RequestParameters;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CompanyEmployees.Controllers
@@ -121,7 +122,20 @@ namespace CompanyEmployees.Controllers
             await _repository.SaveAsync();
             return NoContent();
         }
+        [HttpGet("{companyId}/employees")]
+        public async Task<IActionResult> GetEmployeesForCompany(Guid companyId,[FromQuery] EmployeeParameters employeeParameters)
+        {
+            var company = await _repository.Company.GetCompanyAsync(companyId, false);
+            if (company == null)
+            {
+                _logger.LogInfo($"Company with Id: {companyId} does not exist");
+                return NotFound();
+            }
 
+            var employeesFromDb =await _repository.Employee.GetEmployeesAsync(companyId,employeeParameters, trackChanges: false);
+            var employeesDto = _mapper.Map<EmployeeDto[]>(employeesFromDb);
+            return Ok(employeesDto);
+        }
 
         [HttpPut("{id}")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
