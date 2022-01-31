@@ -6,6 +6,7 @@ using Entities.DataTransferObjects;
 using Entities.Models;
 using Entities.RequestParameters;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace CompanyEmployees.Controllers
 {
@@ -141,6 +142,7 @@ namespace CompanyEmployees.Controllers
 
             var employeesFromDb =await _repository.Employee.GetEmployeesAsync(companyId,employeeParameters, trackChanges: false);
             var employeesDto = _mapper.Map<EmployeeDto[]>(employeesFromDb);
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(employeesFromDb.MetaData));
             return Ok(employeesDto);
         }
 
