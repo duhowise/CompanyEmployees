@@ -1,8 +1,11 @@
 using CompanyEmployees.ActionFilters;
 using CompanyEmployees.Extensions;
+using Contracts;
+using Entities.DataTransferObjects;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using NLog;
+using Repository.Extensions;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,6 +31,8 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<ValidationFilterAttribute>();
+builder.Services.AddScoped<IDataShaper<EmployeeDto>, DataShaper<EmployeeDto>>();
+;
 builder.Services.AddScoped<ValidateCompanyExistsAttribute>();
 builder.Services.AddScoped<ValidateEmployeeForCompanyExistsAttribute>();
 var app = builder.Build();
