@@ -1,9 +1,7 @@
-﻿using System.Net.Http.Headers;
-using Contracts;
+﻿using Contracts;
 using Entities.DataTransferObjects;
 using Entities.LinkModels;
 using Entities.Models;
-using Microsoft.Net.Http.Headers;
 
 namespace CompanyEmployees.Utility;
 
