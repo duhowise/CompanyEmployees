@@ -12,5 +12,7 @@ public class EmployeeParameters : RequestParameters
     public uint MaxAge { get; set; } = int.MaxValue;
   [JsonIgnore]  public bool ValidAgeRange => MaxAge > MinAge;
   public string SearchTerm { get; set; }
+  public string Fields { get; set; }
+
 
 }
