@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Entities.DataTransferObjects;
+﻿namespace Entities.DataTransferObjects;
 
 public class EmployeeForCreationDto: EmployeeForManipulationDto
 {
