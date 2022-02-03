@@ -1,6 +1,8 @@
 ﻿using Contracts;
 using Entities;
 using LoggerService;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 using Repository;
@@ -54,5 +56,28 @@ public static class ServiceExtensions
                 config.FormatterMappings.SetMediaTypeMappingForFormat("csv", MediaTypeHeaderValue.Parse("text/csv"));
             }
         );
+    }
+
+    public static void AddCustomMediaTypes(this IServiceCollection services)
+    {
+        services.Configure<MvcOptions>(config =>
+        {
+            var newtonsoftJsonOutputFormatter = config.OutputFormatters
+                .OfType<NewtonsoftJsonOutputFormatter>()?.FirstOrDefault();
+            if (newtonsoftJsonOutputFormatter != null)
+            {
+                newtonsoftJsonOutputFormatter
+                    .SupportedMediaTypes
+                    .Add("application/vnd.codemaze.hateoas+json");
+            }
+            var xmlOutputFormatter = config.OutputFormatters
+                .OfType<XmlDataContractSerializerOutputFormatter>()?.FirstOrDefault();
+            if (xmlOutputFormatter != null)
+            {
+                xmlOutputFormatter
+                    .SupportedMediaTypes
+                    .Add("application/vnd.codemaze.hateoas+xml");
+            }
+        });
     }
 }
