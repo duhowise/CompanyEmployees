@@ -2,6 +2,7 @@
 using Entities.DataTransferObjects;
 using Entities.LinkModels;
 using Entities.Models;
+using Microsoft.Net.Http.Headers;
 
 namespace CompanyEmployees.Utility;
 
@@ -35,8 +36,8 @@ public class EmployeeLinks
 
     private bool ShouldGenerateLinks(HttpContext httpContext)
     {
-        var mediaType = httpContext.Request.GetTypedHeaders().Accept;
-        return mediaType[0].SubTypeWithoutSuffix.EndsWith("hateoas", StringComparison.InvariantCultureIgnoreCase);
+        var mediaType =(MediaTypeHeaderValue) httpContext.Items["AcceptHeaderMediaType"];
+        return mediaType.SubTypeWithoutSuffix.EndsWith("hateoas", StringComparison.InvariantCultureIgnoreCase);
     }
 
     private LinkResponse ReturnShapedEmployees(List<Entity> shapedEmployees) => new LinkResponse { ShapedEntities = shapedEmployees };
