@@ -69,6 +69,8 @@ public static class ServiceExtensions
                 newtonsoftJsonOutputFormatter
                     .SupportedMediaTypes
                     .Add("application/vnd.codemaze.hateoas+json");
+                newtonsoftJsonOutputFormatter
+                    .SupportedMediaTypes.Add("application/vnd.codemaze.apiroot+json");
             }
             var xmlOutputFormatter = config.OutputFormatters
                 .OfType<XmlDataContractSerializerOutputFormatter>()?.FirstOrDefault();
@@ -77,6 +79,8 @@ public static class ServiceExtensions
                 xmlOutputFormatter
                     .SupportedMediaTypes
                     .Add("application/vnd.codemaze.hateoas+xml");
+                xmlOutputFormatter
+                    .SupportedMediaTypes.Add("application/vnd.codemaze.apiroot+xml");
             }
         });
     }
