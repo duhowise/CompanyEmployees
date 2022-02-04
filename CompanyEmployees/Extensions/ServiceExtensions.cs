@@ -84,4 +84,19 @@ public static class ServiceExtensions
             }
         });
     }
+
+    public static void ConfigureVersioning(this IServiceCollection services)
+    {
+        services.AddApiVersioning(option =>
+        {
+            option.ReportApiVersions = true;
+            option.AssumeDefaultVersionWhenUnspecified = true;
+            option.DefaultApiVersion = new ApiVersion(1, 0);
+        });
+        services.AddVersionedApiExplorer(setup =>
+        {
+            setup.GroupNameFormat = "'v' VVV";
+            setup.SubstituteApiVersionInUrl = true;
+        });
+    }
 }
