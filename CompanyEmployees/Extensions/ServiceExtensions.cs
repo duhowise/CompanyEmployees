@@ -3,6 +3,7 @@ using Entities;
 using LoggerService;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 using Repository;
@@ -82,6 +83,22 @@ public static class ServiceExtensions
                 xmlOutputFormatter
                     .SupportedMediaTypes.Add("application/vnd.codemaze.apiroot+xml");
             }
+        });
+    }
+
+    public static void ConfigureVersioning(this IServiceCollection services)
+    {
+        services.AddApiVersioning(option =>
+        {
+            option.ReportApiVersions = true;
+            option.AssumeDefaultVersionWhenUnspecified = true;
+            option.DefaultApiVersion = new ApiVersion(1, 0);
+            option.ApiVersionReader = new HeaderApiVersionReader("api-version");
+        });
+        services.AddVersionedApiExplorer(setup =>
+        {
+            setup.GroupNameFormat = "'v'VVV";
+            setup.SubstituteApiVersionInUrl = true;
         });
     }
 }

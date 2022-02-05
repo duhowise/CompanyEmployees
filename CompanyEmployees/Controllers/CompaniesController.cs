@@ -10,7 +10,8 @@ using Newtonsoft.Json;
 
 namespace CompanyEmployees.Controllers
 {
-    [Route("api/companies")]
+   [ApiVersion("1.0")]
+   [Route("api/companies")]
     [ApiController]
     public class CompaniesController : ControllerBase
     {
