@@ -101,4 +101,9 @@ public static class ServiceExtensions
             setup.SubstituteApiVersionInUrl = true;
         });
     }
+
+    public static void ConfigureResponseCaching(this IServiceCollection services)
+    {
+        services.AddResponseCaching();
+    }
 }
