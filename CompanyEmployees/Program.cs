@@ -6,8 +6,12 @@ using Entities.DataTransferObjects;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
 using NLog;
 using Repository.Extensions;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -36,6 +40,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.ConfigureVersioning();
 builder.Services.AddScoped<ValidationFilterAttribute>();
 builder.Services.AddScoped<ValidateMediaTypeAttribute>();
+builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, SwaggerConfigureOptions>();
 
 builder.Services.AddScoped<EmployeeLinks>();
 builder.Services.AddScoped<IDataShaper<EmployeeDto>, DataShaper<EmployeeDto>>();
@@ -48,12 +53,26 @@ var apiVersionDescriptionProvider = app.Services.GetRequiredService<IApiVersionD
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
-    app.UseSwagger();
+    app.UseSwagger(options =>
+    {
+        options.PreSerializeFilters.Add(((swaggerDocument, request) =>
+        {
+            swaggerDocument.Servers = new List<OpenApiServer>
+            {
+                new OpenApiServer
+                {
+                    Url = $"https://{request.Host}"
+                }
+            };
+        }));
+    });
     app.UseSwaggerUI(options =>
     {
         foreach (var versionDescription in apiVersionDescriptionProvider.ApiVersionDescriptions)
         {
             options.SwaggerEndpoint($"/swagger/{versionDescription.GroupName}/swagger.json",versionDescription.GroupName.ToUpperInvariant());
+            options.DefaultModelExpandDepth(-1);
+            options.DocExpansion(DocExpansion.None);
         }
     });
 }
