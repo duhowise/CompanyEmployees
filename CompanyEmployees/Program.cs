@@ -40,6 +40,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.ConfigureVersioning();
 builder.Services.ConfigureResponseCaching();
+builder.Services.ConfigureHttpCacheHeaders();
 builder.Services.AddScoped<ValidationFilterAttribute>();
 builder.Services.AddScoped<ValidateMediaTypeAttribute>();
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, SwaggerConfigureOptions>();
@@ -92,6 +93,7 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 });
 app.UseAuthorization();
 app.UseResponseCaching();
+app.UseHttpCacheHeaders();
 app.MapControllers();
 
 app.Run();

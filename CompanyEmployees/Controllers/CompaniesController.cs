@@ -5,15 +5,15 @@ using Contracts;
 using Entities.DataTransferObjects;
 using Entities.Models;
 using Entities.RequestParameters;
+using Marvin.Cache.Headers;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace CompanyEmployees.Controllers
 {
-   [ApiVersion("1.0")]
-   [Route("api/companies")]
+    [ApiVersion("1.0")]
+    [Route("api/companies")]
     [ApiController]
-   [ResponseCache(CacheProfileName = "120SecondsDuration")]
     public class CompaniesController : ControllerBase
     {
         private readonly IRepositoryManager _repository;
@@ -37,7 +37,9 @@ namespace CompanyEmployees.Controllers
         }
 
         [HttpGet("{id}", Name = "CompanyById")]
-     [ResponseCache(Duration = 60)]   public async Task<IActionResult> GetCompany(Guid id)
+        [HttpCacheExpiration(CacheLocation = CacheLocation.Public, MaxAge = 60)]
+        [HttpCacheValidation(MustRevalidate = false)]
+        public async Task<IActionResult> GetCompany(Guid id)
         {
             var company = await _repository.Company.GetCompanyAsync(id, trackChanges: false);
             if (company == null)
@@ -125,11 +127,11 @@ namespace CompanyEmployees.Controllers
             await _repository.SaveAsync();
             return NoContent();
         }
+
         [HttpGet("{companyId}/employees")]
-        public async Task<IActionResult> GetEmployeesForCompany(Guid companyId,[FromQuery] EmployeeParameters employeeParameters)
+        public async Task<IActionResult> GetEmployeesForCompany(Guid companyId,
+            [FromQuery] EmployeeParameters employeeParameters)
         {
-
-
             if (!employeeParameters.ValidAgeRange)
             {
                 return BadRequest("max age cannot be less than min age");
@@ -142,7 +144,8 @@ namespace CompanyEmployees.Controllers
                 return NotFound();
             }
 
-            var employeesFromDb =await _repository.Employee.GetEmployeesAsync(companyId,employeeParameters, trackChanges: false);
+            var employeesFromDb =
+                await _repository.Employee.GetEmployeesAsync(companyId, employeeParameters, trackChanges: false);
             var employeesDto = _mapper.Map<EmployeeDto[]>(employeesFromDb);
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(employeesFromDb.MetaData));
             return Ok(employeesDto);
@@ -160,10 +163,10 @@ namespace CompanyEmployees.Controllers
         }
 
 
-
-      [HttpOptions]  public IActionResult GetCompaniesOptions()
+        [HttpOptions]
+        public IActionResult GetCompaniesOptions()
         {
-            Response.Headers.Add("Allow","GET,OPTIONS,POST");
+            Response.Headers.Add("Allow", "GET,OPTIONS,POST");
             return Ok();
         }
     }
