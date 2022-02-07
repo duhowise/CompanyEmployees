@@ -1,3 +1,4 @@
+using AspNetCoreRateLimit;
 using CompanyEmployees.ActionFilters;
 using CompanyEmployees.Extensions;
 using CompanyEmployees.Utility;
@@ -23,6 +24,7 @@ builder.Services.ConfigureLoggerService();
 builder.Services.ConfigureSqlContext(builder.Configuration);
 builder.Services.ConfigureRepositoryManager();
 builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddMemoryCache();
 builder.Services.AddControllers(config =>
 {
     config.RespectBrowserAcceptHeader = true;
@@ -41,6 +43,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.ConfigureVersioning();
 builder.Services.ConfigureResponseCaching();
 builder.Services.ConfigureHttpCacheHeaders();
+builder.Services.ConfigureRateLimitingOptions();
 builder.Services.AddScoped<ValidationFilterAttribute>();
 builder.Services.AddScoped<ValidateMediaTypeAttribute>();
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, SwaggerConfigureOptions>();
@@ -94,6 +97,7 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 app.UseAuthorization();
 app.UseResponseCaching();
 app.UseHttpCacheHeaders();
+app.UseIpRateLimiting();
 app.MapControllers();
 
 app.Run();
