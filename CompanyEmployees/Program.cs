@@ -37,6 +37,8 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
     options.SuppressModelStateInvalidFilter = true;
 });
+builder.Services.AddAuthentication();
+builder.Services.ConfigureIdentity();
 builder.Services.AddCustomMediaTypes();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -72,6 +74,8 @@ if (app.Environment.IsDevelopment())
             };
         }));
     });
+    app.UseAuthentication();
+    app.UseAuthorization();
     app.UseSwaggerUI(options =>
     {
         foreach (var versionDescription in apiVersionDescriptionProvider.ApiVersionDescriptions)
