@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using NLog;
+using Repository;
 using Repository.Extensions;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
@@ -39,6 +40,8 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 });
 builder.Services.AddAuthentication();
 builder.Services.ConfigureIdentity();
+builder.Services.ConfigureJWT(builder.Configuration);
+
 builder.Services.AddCustomMediaTypes();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -52,7 +55,7 @@ builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, SwaggerConfi
 
 builder.Services.AddScoped<EmployeeLinks>();
 builder.Services.AddScoped<IDataShaper<EmployeeDto>, DataShaper<EmployeeDto>>();
-;
+builder.Services.AddScoped<IAuthenticationManager, AuthenticationManager>();
 builder.Services.AddScoped<ValidateCompanyExistsAttribute>();
 builder.Services.AddScoped<ValidateEmployeeForCompanyExistsAttribute>();
 var app = builder.Build();
@@ -61,7 +64,7 @@ var apiVersionDescriptionProvider = app.Services.GetRequiredService<IApiVersionD
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
-    app.UseSwagger(options =>
+    app.UseSwagger(options => 
     {
         options.PreSerializeFilters.Add(((swaggerDocument, request) =>
         {

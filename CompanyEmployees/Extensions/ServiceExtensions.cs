@@ -1,14 +1,17 @@
-﻿using AspNetCoreRateLimit;
+﻿using System.Text;
+using AspNetCoreRateLimit;
 using Contracts;
 using Entities;
 using Entities.Models;
 using LoggerService;
 using Marvin.Cache.Headers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
 using Repository;
 
@@ -133,7 +136,7 @@ public static class ServiceExtensions
             new RateLimitRule
             {
                 Endpoint = "*",
-                Limit = 3,
+                Limit = 30,
                 Period = "5m"
             }
         };
@@ -162,4 +165,30 @@ public static class ServiceExtensions
 
         builder.AddEntityFrameworkStores<RepositoryContext>().AddDefaultTokenProviders();
     }
+
+    public static void ConfigureJWT(this IServiceCollection services,IConfiguration configuration)
+    {
+        var jwtSettings = configuration.GetSection("JwtSettings");
+        var secretKey = Environment.GetEnvironmentVariable("SECRET");
+
+        services.AddAuthentication(option =>
+        {
+            option.DefaultAuthenticateScheme= JwtBearerDefaults.AuthenticationScheme;
+            option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        }).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwtSettings.GetSection("validIssuer").Value,
+                    ValidAudience = jwtSettings.GetSection("validAudience").Value,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+                };
+            })
+            ;
+    }
+
 }
