@@ -44,7 +44,7 @@ builder.Services.ConfigureJWT(builder.Configuration);
 
 builder.Services.AddCustomMediaTypes();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.ConfigureSwagger();
 builder.Services.ConfigureVersioning();
 builder.Services.ConfigureResponseCaching();
 builder.Services.ConfigureHttpCacheHeaders();
